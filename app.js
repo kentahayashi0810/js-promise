@@ -45,3 +45,45 @@ Promise.all([
 ])
   .then((response) => console.log(response))
   .catch((error) => console.log(`エラー：${error}`));
+
+Promise.allSettled([
+  asyncProcess("Success A"),
+  asyncProcess("Success B"),
+  asyncProcess(""),
+])
+  .then((response) => console.log(response))
+  .catch((error) => console.log(`エラー：${error}`));
+
+Promise.race([asyncProcess("aa"), asyncProcess(""), asyncProcess("ii")])
+  .then((response) => console.log(response))
+  .catch((error) => console.log(`エラー： ${error}`));
+
+Promise.any([
+  asyncProcess(""),
+  asyncProcess(""),
+  asyncProcess("Success!"),
+  asyncProcess("Success 2!"),
+])
+  .then((response) => console.log(response))
+  .catch((error) => console.log(`エラー：${error}`));
+
+function asyncProcess2(num) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (typeof num == "number") {
+        resolve(num ** 2);
+      } else {
+        reject("引数は数値でなければなりません。");
+      }
+    }, 500);
+  });
+}
+async function main(num) {
+  let result1 = await asyncProcess2(num);
+  let result2 = await asyncProcess2(result1);
+  let result3 = await asyncProcess2(result2);
+  return result3;
+}
+main(6)
+  .then((response) => console.log(response))
+  .catch((error) => console.log(`エラー：${error}`));
